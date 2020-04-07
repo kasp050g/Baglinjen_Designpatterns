@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Baglinjen_Designpatterns.Components;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Baglinjen_Designpatterns
 {
@@ -9,13 +11,34 @@ namespace Baglinjen_Designpatterns
     /// </summary>
     public class GameWorld : Game
     {
+        private static GameWorld instance;
+
+        public static GameWorld Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new GameWorld();
+                }
+                return instance;
+            }
+        }
+
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Player player;
+
+        public float Deltatime { get; set; }
+        private List<GameObject> gameObjects = new List<GameObject>();
 
         public GameWorld()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+
         }
 
         /// <summary>
@@ -27,7 +50,21 @@ namespace Baglinjen_Designpatterns
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            GameObject go = new GameObject();
 
+            player = new Player();
+
+            go.AddComponent(player);
+
+            go.AddComponent(new SpriteRenderer());
+
+            gameObjects.Add(go);
+
+
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                gameObjects[i].Awake();
+            }
             base.Initialize();
         }
 
@@ -40,6 +77,10 @@ namespace Baglinjen_Designpatterns
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                gameObjects[i].Start();
+            }
             // TODO: use this.Content to load your game content here
         }
 
