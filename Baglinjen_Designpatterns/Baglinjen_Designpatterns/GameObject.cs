@@ -11,7 +11,7 @@ namespace Baglinjen_Designpatterns
 {
     public class GameObject
     {
-        public Transform Transform { get; set; }
+        public Transform Transform { get; private set; }
 
         private Dictionary<string, Component> components = new Dictionary<string, Component>();
 
@@ -56,7 +56,6 @@ namespace Baglinjen_Designpatterns
                 if (component.IsEnabled)
                 {
                     component.Update(gameTime);
-
                 }
             }
         }
@@ -68,7 +67,6 @@ namespace Baglinjen_Designpatterns
                 if (component.IsEnabled)
                 {
                     component.Draw(spriteBatch);
-
                 }
             }
         }
