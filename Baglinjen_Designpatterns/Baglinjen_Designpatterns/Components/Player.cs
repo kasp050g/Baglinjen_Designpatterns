@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Baglinjen_Designpatterns.CommandPattern;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,12 @@ namespace Baglinjen_Designpatterns.Components
     class Player : Component
     {
         private float speed;
-        //private Vector2 origin;
         private SpriteRenderer spriteRenderer;
 
         public Player()
         {
-            this.speed = 100;
+            this.speed = 300;
+			InputHandler.Instance.Entity = this;
         }
 
         public void Move(Vector2 velocity)
@@ -33,7 +34,7 @@ namespace Baglinjen_Designpatterns.Components
         public override void Awake()
         {
             GameObject.Transform.Position = new Vector2(GameWorld.Instance.GraphicsDevice.Viewport.Width / 2,
-            GameWorld.Instance.GraphicsDevice.Viewport.Height);
+            GameWorld.Instance.GraphicsDevice.Viewport.Height / 2);
 
             spriteRenderer = (SpriteRenderer)GameObject.GetComponent("SpriteRenderer");
         }
@@ -41,8 +42,8 @@ namespace Baglinjen_Designpatterns.Components
         public override void Start()
         {
             SpriteRenderer sr = (SpriteRenderer)GameObject.GetComponent("SpriteRenderer");
-            //sr.SetSprite("Inset Sprite");
-            //sr.Origin = new Vector2(sr.Sprite.Width / 2, (sr.Sprite.Height / 2) + 40);
+            sr.SetSprite("Image/playerPixel");
+            sr.Origin = new Vector2(sr.Sprite.Width / 2, sr.Sprite.Height / 2);
 
         }
 

@@ -1,8 +1,10 @@
 ﻿using Baglinjen_Designpatterns.Components;
+using Baglinjen_Designpatterns.Builder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Baglinjen_Designpatterns.CommandPattern;
 
 namespace Baglinjen_Designpatterns
 {
@@ -11,7 +13,8 @@ namespace Baglinjen_Designpatterns
     /// </summary>
     public class GameWorld : Game
     {
-        private static GameWorld instance;
+		#region Instance
+		private static GameWorld instance;
 
         public static GameWorld Instance
         {
@@ -24,11 +27,10 @@ namespace Baglinjen_Designpatterns
                 return instance;
             }
         }
+		#endregion
 
-
-        GraphicsDeviceManager graphics;
+		GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Player player;
 
         public float Deltatime { get; set; }
         private List<GameObject> gameObjects = new List<GameObject>();
@@ -37,8 +39,6 @@ namespace Baglinjen_Designpatterns
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-
         }
 
         /// <summary>
@@ -49,17 +49,12 @@ namespace Baglinjen_Designpatterns
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            GameObject go = new GameObject();
+			// TODO: Add your initialization logic here
+			IsMouseVisible = true;
 
-            player = new Player();
+			Director director = new Director(new PlayerBuilder());
 
-            go.AddComponent(player);
-
-            go.AddComponent(new SpriteRenderer());
-
-            gameObjects.Add(go);
-
+			gameObjects.Add(director.Construct());
 
             for (int i = 0; i < gameObjects.Count; i++)
             {
@@ -103,9 +98,16 @@ namespace Baglinjen_Designpatterns
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+			// TODO: Add your update logic here
+			Deltatime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			InputHandler.Instance.Execute();
 
-            base.Update(gameTime);
+			for (int i = 0; i < gameObjects.Count; i++)
+			{
+				gameObjects[i].Update(gameTime);
+			}
+
+			base.Update(gameTime);
         }
 
         /// <summary>
@@ -116,9 +118,24 @@ namespace Baglinjen_Designpatterns
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+			// TODO: Add your drawing code here
+			spriteBatch.Begin();
 
-            base.Draw(gameTime);
+			for (int i = 0; i < gameObjects.Count; i++)
+			{
+				gameObjects[i].Draw(spriteBatch);
+			}
+
+			spriteBatch.End();
+
+			base.Draw(gameTime);
         }
+
+		public void AddGameObject(GameObject go)
+		{
+			go.Awake();
+			go.Start();
+			gameObjects.Add(go);
+		}
     }
 }
