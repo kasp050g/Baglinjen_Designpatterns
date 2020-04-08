@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.Components
 {
-    class SpriteRenderer : Component
+    public class SpriteRenderer : Component
     {
         public Texture2D Sprite { get; set; }
 
@@ -24,8 +24,12 @@ namespace Baglinjen_Designpatterns.Components
             SetSprite(spriteName);
         }
 
+		public SpriteRenderer Clone()
+		{
+			return (SpriteRenderer)this.MemberwiseClone();
+		}
 
-        public void SetSprite(string spriteName)
+		public void SetSprite(string spriteName)
         {
             Sprite = GameWorld.Instance.Content.Load<Texture2D>(spriteName);
 
@@ -39,11 +43,6 @@ namespace Baglinjen_Designpatterns.Components
         public override string ToString()
         {
             return "SpriteRenderer";
-        }
-
-        public SpriteRenderer Clone()
-        {
-            return (SpriteRenderer)this.MemberwiseClone();
         }
     }
 }
