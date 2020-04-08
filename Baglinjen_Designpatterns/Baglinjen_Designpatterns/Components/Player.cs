@@ -1,4 +1,5 @@
 ﻿using Baglinjen_Designpatterns.CommandPattern;
+using Baglinjen_Designpatterns.ObserverPattern;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.Components
 {
-    class Player : Component
+    public class Player : Component, IGameListner
     {
         private float speed;
-        private SpriteRenderer spriteRenderer;
+        //private SpriteRenderer spriteRenderer;
 
         public Player()
         {
@@ -28,22 +29,17 @@ namespace Baglinjen_Designpatterns.Components
 
             velocity *= speed;
 
-            GameObject.Transform.Translate(velocity * GameWorld.Instance.Deltatime);
+            GameObject.Transform.Translate(velocity * GameWorld.Instance.DeltaTime);
         }
 
         public override void Awake()
         {
             GameObject.Transform.Position = new Vector2(GameWorld.Instance.GraphicsDevice.Viewport.Width / 2,
             GameWorld.Instance.GraphicsDevice.Viewport.Height / 2);
-
-            spriteRenderer = (SpriteRenderer)GameObject.GetComponent("SpriteRenderer");
         }
 
         public override void Start()
         {
-            SpriteRenderer sr = (SpriteRenderer)GameObject.GetComponent("SpriteRenderer");
-            sr.SetSprite("Image/playerPixel");
-            sr.Origin = new Vector2(sr.Sprite.Width / 2, sr.Sprite.Height / 2);
 
         }
 
@@ -52,5 +48,17 @@ namespace Baglinjen_Designpatterns.Components
             return "Player";
         }
 
+        public override void Destroy()
+        {
+            GameWorld.Instance.Colliders.Remove((Collider)GameObject.GetComponent("Collider"));
+        }
+
+        public void Notify(GameEvent gameEvent, Component other)
+        {
+            if (gameEvent.Title == "Collider" && other.GameObject.Tag == "Friend")
+            {
+                other.GameObject.Destroy();
+            }
+        }
     }
 }

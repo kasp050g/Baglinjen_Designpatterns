@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.CommandPattern
 {
-    interface ICommand
+    public interface ICommand
     {
         void Execute(Player player);
     }

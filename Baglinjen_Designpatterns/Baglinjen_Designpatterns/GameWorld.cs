@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Baglinjen_Designpatterns.CommandPattern;
+using Baglinjen_Designpatterns.ObjectPool;
+using System;
 
 namespace Baglinjen_Designpatterns
 {
@@ -32,8 +34,14 @@ namespace Baglinjen_Designpatterns
 		GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public float Deltatime { get; set; }
         private List<GameObject> gameObjects = new List<GameObject>();
+        public List<Collider> Colliders { get; set; } = new List<Collider>();
+
+        public float DeltaTime { get; set; }
+        private float spawnTime;
+        private float cooldown = 1;
+
+        private Random rnd = new Random();
 
         public GameWorld()
         {
@@ -52,7 +60,9 @@ namespace Baglinjen_Designpatterns
 			// TODO: Add your initialization logic here
 			IsMouseVisible = true;
 
-			Director director = new Director(new PlayerBuilder());
+
+
+            Director director = new Director(new PlayerBuilder());
 
 			gameObjects.Add(director.Construct());
 
@@ -98,8 +108,9 @@ namespace Baglinjen_Designpatterns
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-			// TODO: Add your update logic here
-			Deltatime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            // TODO: Add your update logic here
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 			InputHandler.Instance.Execute();
 
 			for (int i = 0; i < gameObjects.Count; i++)
@@ -107,7 +118,19 @@ namespace Baglinjen_Designpatterns
 				gameObjects[i].Update(gameTime);
 			}
 
-			base.Update(gameTime);
+            Collider[] tmpColliders = Colliders.ToArray();
+
+            for (int i = 0; i < tmpColliders.Length; i++)
+            {
+                for (int j = 0; j < tmpColliders.Length; j++)
+                {
+                    tmpColliders[i].OnCollisionEnter(tmpColliders[j]);
+                }
+            }
+
+            SpawnEnemy();
+
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -136,6 +159,36 @@ namespace Baglinjen_Designpatterns
 			go.Awake();
 			go.Start();
 			gameObjects.Add(go);
-		}
+
+            Collider c = (Collider)go.GetComponent("Collider");
+
+            if (c != null)
+            {
+                Colliders.Add(c);
+            }
+        }
+
+        public void RemoveGameObject(GameObject go)
+        {
+            gameObjects.Remove(go);
+        }
+
+        private void SpawnEnemy()
+        {
+            spawnTime += DeltaTime;
+
+            if (spawnTime >= cooldown)
+            {
+                GameObject go = FriendPool.Instance.GetObject();
+
+                go.Transform.Position = new Vector2(
+                    rnd.Next(0, GameWorld.Instance.GraphicsDevice.Viewport.Width),
+                    rnd.Next(0, GameWorld.Instance.GraphicsDevice.Viewport.Height)
+                        );
+
+                AddGameObject(go);
+                spawnTime = 0;
+            }
+        }
     }
 }

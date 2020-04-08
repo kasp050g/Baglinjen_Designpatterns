@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Baglinjen_Designpatterns
+namespace Baglinjen_Designpatterns.ObjectPool
 {
     public abstract class ObjectPool
     {
         protected List<GameObject> active = new List<GameObject>();
 
         protected Stack<GameObject> inactive = new Stack<GameObject>();
-
 
         public GameObject GetObject()
         {
@@ -31,7 +30,7 @@ namespace Baglinjen_Designpatterns
 
         public void ReleaseObject(GameObject gameObject)
         {
-            //TODO: GameWorld.Instance.RemoveGameObject(gameObject);
+            GameWorld.Instance.RemoveGameObject(gameObject);
             active.Remove(gameObject);
             inactive.Push(gameObject);
         }

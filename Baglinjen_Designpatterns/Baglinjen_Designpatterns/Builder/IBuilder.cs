@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.Builder
 {
-	interface IBuilder
+	public interface IBuilder
 	{
 		GameObject GetResult();
 

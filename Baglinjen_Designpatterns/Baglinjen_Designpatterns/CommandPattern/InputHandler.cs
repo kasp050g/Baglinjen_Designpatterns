@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.CommandPattern
 {
-    class InputHandler
+    public class InputHandler
     {
 		public Player Entity;
 		public Dictionary<Keys, ICommand> keybinds = new Dictionary<Keys, ICommand>();

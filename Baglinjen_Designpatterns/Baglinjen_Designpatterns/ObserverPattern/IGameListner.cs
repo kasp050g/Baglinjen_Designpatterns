@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.ObserverPattern
 {
-     interface IGameListner
+    public interface IGameListner
     {
         void Notify(GameEvent gameEvent, Component component);
     }

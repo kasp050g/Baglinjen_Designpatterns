@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.CommandPattern
 {
-    class MoveCommand : ICommand
+   public class MoveCommand : ICommand
     {
         private Vector2 velocity;
 

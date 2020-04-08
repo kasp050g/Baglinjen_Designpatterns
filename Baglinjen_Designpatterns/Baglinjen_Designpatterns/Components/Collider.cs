@@ -10,17 +10,19 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.Components
 {
-    class Collider : Component
+    public class Collider : Component
     {
-        public bool CheckCollisionEvents { get; set; }
+        public bool CheckCollisionEvents { get; set; } = true;
 
-        private GameEvent onCollisionEvent = new GameEvent("Collision");
+        private GameEvent onCollisionEvent = new GameEvent("Collider");
 
         private Vector2 size;
 
         private Vector2 origin;
 
         private Texture2D texture;
+
+        private SpriteRenderer spriteRenderer;
 
         public Rectangle CollisionBox
         {
@@ -29,7 +31,6 @@ namespace Baglinjen_Designpatterns.Components
                 return new Rectangle
                 (
                     (int)(GameObject.Transform.Position.X - origin.X),
-
                     (int)(GameObject.Transform.Position.Y - origin.Y),
 
                     (int)size.X,
@@ -41,16 +42,18 @@ namespace Baglinjen_Designpatterns.Components
         public Collider(SpriteRenderer spriteRenderer)
         {
             this.origin = spriteRenderer.Origin;
+            this.spriteRenderer = spriteRenderer;
             this.size = new Vector2(spriteRenderer.Sprite.Width, spriteRenderer.Sprite.Height);
-            texture = GameWorld.Instance.Content.Load<Texture2D>("CollisionBox");
+            texture = GameWorld.Instance.Content.Load<Texture2D>("Image/CollisionTexture");
         }
 
         public Collider(SpriteRenderer spriteRenderer, IGameListner gameListner)
         {
             onCollisionEvent.Attach(gameListner);
             this.origin = spriteRenderer.Origin;
+            this.spriteRenderer = spriteRenderer;
             this.size = new Vector2(spriteRenderer.Sprite.Width, spriteRenderer.Sprite.Height);
-            texture = GameWorld.Instance.Content.Load<Texture2D>("CollisionBox");
+            texture = GameWorld.Instance.Content.Load<Texture2D>("Image/CollisionTexture");
         }
 
 
@@ -71,7 +74,16 @@ namespace Baglinjen_Designpatterns.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, CollisionBox, null, Color.Red, 0, origin, SpriteEffects.None, 0);
+            Rectangle collisionBox = CollisionBox;
+            Rectangle topLine = new Rectangle(collisionBox.X, collisionBox.Y, collisionBox.Width, 1);
+            Rectangle bottomLine = new Rectangle(collisionBox.X, collisionBox.Y + collisionBox.Height, collisionBox.Width, 1);
+            Rectangle rigthLine = new Rectangle(collisionBox.X + collisionBox.Width, collisionBox.Y, 1, collisionBox.Height);
+            Rectangle leftLine = new Rectangle(collisionBox.X, collisionBox.Y, 1, collisionBox.Height);
+
+            spriteBatch.Draw(spriteRenderer.Sprite, topLine, null, Color.Red, 0, Vector2.Zero, SpriteEffects.None, 1);
+            spriteBatch.Draw(spriteRenderer.Sprite, bottomLine, null, Color.Red, 0, Vector2.Zero, SpriteEffects.None, 1);
+            spriteBatch.Draw(spriteRenderer.Sprite, rigthLine, null, Color.Red, 0, Vector2.Zero, SpriteEffects.None, 1);
+            spriteBatch.Draw(spriteRenderer.Sprite, leftLine, null, Color.Red, 0, Vector2.Zero, SpriteEffects.None, 1);
         }
 
         public override string ToString()

@@ -7,16 +7,21 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.Builder
 {
-	class PlayerBuilder : IBuilder
+	public class PlayerBuilder : IBuilder
 	{
 		private GameObject go;
 
 		public void BuildGameObject()
 		{
 			go = new GameObject();
+            Player player = new Player();
 
-			go.AddComponent(new Player());
-			go.AddComponent(new SpriteRenderer());
+            go.AddComponent(player);
+            SpriteRenderer sr= new SpriteRenderer("Image/playerPixel");
+
+            go.AddComponent(sr);
+            go.AddComponent(new Collider(sr, player));
+            GameWorld.Instance.Colliders.Add((Collider)go.GetComponent("Collider"));
 		}
 
 		public GameObject GetResult()

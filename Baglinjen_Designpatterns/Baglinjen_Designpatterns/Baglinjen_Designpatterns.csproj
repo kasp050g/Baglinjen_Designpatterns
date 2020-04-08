@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E32AE6CE-A50A-4762-A702-62018F4A05A2}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Baglinjen_Designpatterns</RootNamespace>
     <AssemblyName>Baglinjen_Designpatterns</AssemblyName>
@@ -40,6 +40,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Builder\Director.cs" />
     <Compile Include="Builder\IBuilder.cs" />
@@ -49,11 +52,14 @@
     <Compile Include="CommandPattern\MoveCommand.cs" />
     <Compile Include="Components\Collider.cs" />
     <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\Friend.cs" />
     <Compile Include="Components\Player.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
     <Compile Include="FactoryPattern\Factory.cs" />
+    <Compile Include="FactoryPattern\FriendFactory.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameWorld.cs" />
+    <Compile Include="ObjectPool\FriendPool.cs" />
     <Compile Include="ObjectPool\ObjectPool.cs" />
     <Compile Include="ObserverPattern\GameEvent.cs" />
     <Compile Include="ObserverPattern\IGameListner.cs" />

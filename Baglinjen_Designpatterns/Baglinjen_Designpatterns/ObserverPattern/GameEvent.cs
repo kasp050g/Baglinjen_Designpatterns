@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Baglinjen_Designpatterns.ObserverPattern
 {
-     class GameEvent
+    public class GameEvent
     {
         private List<IGameListner> listners = new List<IGameListner>();
 

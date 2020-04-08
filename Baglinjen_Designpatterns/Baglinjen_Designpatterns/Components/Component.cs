@@ -32,5 +32,10 @@ namespace Baglinjen_Designpatterns.Components
         {
 
         }
+
+        public virtual void Destroy()
+        {
+
+        }
     }
 }
