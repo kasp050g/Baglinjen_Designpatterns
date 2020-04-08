@@ -11,7 +11,9 @@ namespace Baglinjen_Designpatterns.CommandPattern
 {
     class InputHandler
     {
-        private static InputHandler instance;
+		public Player Entity;
+		public Dictionary<Keys, ICommand> keybinds = new Dictionary<Keys, ICommand>();
+		private static InputHandler instance;
 
         public static InputHandler Instance
         {
@@ -25,9 +27,6 @@ namespace Baglinjen_Designpatterns.CommandPattern
             }
         }
 
-
-        private Dictionary<Keys, ICommand> keybinds = new Dictionary<Keys, ICommand>();
-
         private InputHandler()
         {
             keybinds.Add(Keys.D, new MoveCommand(new Vector2(1, 0)));
@@ -37,7 +36,7 @@ namespace Baglinjen_Designpatterns.CommandPattern
 
         }
 
-        public void Execute(Player player)
+        public void Execute()
         {
             KeyboardState keyState = Keyboard.GetState();
 
@@ -45,7 +44,7 @@ namespace Baglinjen_Designpatterns.CommandPattern
             {
                 if (keyState.IsKeyDown(key))
                 {
-                    keybinds[key].Execute(player);
+                    keybinds[key].Execute(Entity);
                 }
             }
         }
